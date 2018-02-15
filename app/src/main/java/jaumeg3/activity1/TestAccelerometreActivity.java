@@ -20,7 +20,7 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
     private boolean color = false;
     private TextView view1, view2, view3;
     private long lastUpdate;
-    private float maxRang, downLevel, upLevel, lastLightValue;
+    private float downLevel, upLevel, lastLightValue;
 
 
     /**
@@ -63,9 +63,10 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
             lightSensor = lightSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
             lightSensorManager.registerListener(this, lightSensor,
                     SensorManager.SENSOR_DELAY_NORMAL);
-                    maxRang = lightSensor.getMaximumRange();
-                    downLevel = maxRang / 3 ;
-                    upLevel = 2 * (maxRang / 3);
+            float maxRang = lightSensor.getMaximumRange();
+            downLevel = maxRang / 3 ;
+            upLevel = 2 * (maxRang / 3);
+            view3.setText(String.format("%s\n%s", getString(R.string.lightSensorUp), maxRang));
         } else {
             Toast.makeText(this, "Light Sensor not found", Toast.LENGTH_SHORT).show();
         }
@@ -85,12 +86,16 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
         float values[] = event.values;
         float x = values[0];
         long actualTime = System.currentTimeMillis();
-        if (actualTime - lastUpdate < 200 && x != lastLightValue) {
+        if ((Math.abs(lastLightValue - x)) >= 1000.0) {
+            if (actualTime - lastUpdate < 200) {
+                return;
+            }
+
             lastUpdate = actualTime;
             lastLightValue = x;
-            if (x <= downLevel) {
+            if (x < downLevel) {
                 Toast.makeText(this, "LOW Intensity", Toast.LENGTH_SHORT).show();
-            } else if (x >= upLevel) {
+            } else if (x > upLevel) {
                 Toast.makeText(this, "HIGH Intensity", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "MEDIUM Intensity", Toast.LENGTH_SHORT).show();

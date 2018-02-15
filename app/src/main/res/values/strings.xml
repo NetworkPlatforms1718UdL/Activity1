@@ -7,6 +7,7 @@
     <string name="shake">Shake to get a toast and to switch color</string>
     <string name="shuffed">Device was shuffed</string>
     <string name="accelerometerNotFound">Sorry, there is no accelerometer</string>
+    <string name="lightSensorUp">AAA</string>
     ""
 
 </resources>

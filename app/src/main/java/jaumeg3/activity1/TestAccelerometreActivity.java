@@ -73,6 +73,15 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        accelerometerSensorManager.registerListener(this, accelerometerSensor,
+                SensorManager.SENSOR_DELAY_NORMAL);
+        lightSensorManager.registerListener(this, lightSensor,
+                SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
     public void onSensorChanged(SensorEvent event) {
         manageSensors(event);
     }
@@ -86,7 +95,7 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
         float values[] = event.values;
         float x = values[0];
         long actualTime = System.currentTimeMillis();
-        if ((Math.abs(lastLightValue - x)) >= 1000.0) {
+        if ((Math.abs(lastLightValue - x)) >= 100.0) {
             if (actualTime - lastUpdate < 200) {
                 return;
             }
@@ -94,11 +103,14 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
             lastUpdate = actualTime;
             lastLightValue = x;
             if (x < downLevel) {
-                Toast.makeText(this, "LOW Intensity", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "LOW Intensity", Toast.LENGTH_SHORT).show();
+                view3.setText("LOW Intensity" + "\n" + "");
             } else if (x > upLevel) {
-                Toast.makeText(this, "HIGH Intensity", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "HIGH Intensity", Toast.LENGTH_SHORT).show();
+                view3.setText("HIGH Intensity");
             } else {
-                Toast.makeText(this, "MEDIUM Intensity", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "MEDIUM Intensity", Toast.LENGTH_SHORT).show();
+                view3.setText("MEDIUM Intensity");
             }
         }
     }
